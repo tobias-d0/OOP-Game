@@ -1,5 +1,9 @@
 #pragma once
 
-#include "Entity.h"
+#include "Enemy.h"
 
-class PolarBear: public Entity {};
+class PolarBear: public Enemy {
+  private:
+  public:
+  void takeDamage() override;
+};

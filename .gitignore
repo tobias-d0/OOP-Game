@@ -39,3 +39,8 @@
 
 # debug information files
 *.dwo
+
+# test code folder
+/testcode
+
+*.svg

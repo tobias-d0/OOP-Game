@@ -1,5 +1,5 @@
 #pragma once
 
-#include "Entity.h"
+#include "Enemy.h"
 
-class Wolf: public Entity {};
+class Wolf: public Enemy {};
