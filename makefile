@@ -1,8 +1,8 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall
+CXXFLAGS = -std=c++17 -Wall -Iinclude
 
-SRC = testcode/windowtest.cpp
-OUT = windowtest
+SRC = src/*.cpp
+OUT = ArcticSurvival
 
 all:
 	$(CXX) $(CXXFLAGS) $(SRC) -o $(OUT) -lsfml-graphics -lsfml-window -lsfml-system

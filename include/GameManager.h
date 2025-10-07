@@ -1,13 +1,26 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 
-#include "Environment.h"
+#include "Map.h"
 #include "Player.h"
-#include "Wolf.h"
-#include "Seal.h"
-#include "PolarBear.h"
 
 class GameManager {
- private:
-  
  public:
+  GameManager();
+  void run();
+
+ private:
+  void processEvents();
+  void update(float deltaTime);
+  void render();
+
+  sf::RenderWindow window;
+  sf::View camera;
+  Map map;
+  Player player;
+
+  const unsigned int WINDOW_WIDTH = 720;
+  const unsigned int WINDOW_HEIGHT = 480;
+
+  bool isRunning = true;
 };

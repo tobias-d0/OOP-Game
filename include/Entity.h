@@ -1,22 +1,29 @@
+#pragma once
+#include <SFML/Graphics.hpp>
+
 class Entity {
  private:
   int health;
-  float speed;
-  float posX;
-  float posY;
 
  public:
-  Entity(int health = 100, float x = 0, float y = 0);
+  Entity();
+  virtual ~Entity() = default;
 
-  virtual void takeDamage() = 0;
+  virtual void update(float deltaTime) = 0;
+  virtual void render(sf::RenderWindow& window) = 0;
 
-  void set_health(int health);
-  int get_health() const;
+  sf::Vector2f getPosition() const { return position; }
+  sf::FloatRect getHitbox() const { return sprite.getGlobalBounds(); }
+  int getHealth() const { return health; }
 
-  void move(float dx, float dy);
-  void setPosition(float x, float y);
-  float getX() const;
-  float getY() const;
+  void setPosition(sf::Vector2f position);
 
+  // virtual void takeDamage() = 0;
   bool isAlive() const;
+  void setHealth(int health);
+
+ protected:
+  sf::Sprite sprite;
+  sf::Texture texture;
+  sf::Vector2f position;
 };
