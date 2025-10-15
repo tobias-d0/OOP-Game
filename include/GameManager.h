@@ -5,16 +5,13 @@
 #include "Player.h"
 
 class GameManager {
- public:
-  GameManager();
-  void run();
-
  private:
+  void init();
   void processEvents();
   void update(float deltaTime);
   void render();
 
-  sf::RenderWindow window;
+  sf::RenderWindow* window;
   sf::View camera;
   Map map;
   Player player;
@@ -23,4 +20,9 @@ class GameManager {
   const unsigned int WINDOW_HEIGHT = 480;
 
   bool isRunning = true;
+
+ public:
+  GameManager();
+  ~GameManager();
+  void run();
 };
