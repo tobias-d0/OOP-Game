@@ -12,7 +12,7 @@ class GameManager {
   void render();
 
   sf::RenderWindow* window;
-  sf::View camera;
+  // sf::View camera;
   Map map;
   Player player;
 

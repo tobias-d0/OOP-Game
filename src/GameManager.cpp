@@ -12,8 +12,8 @@ void GameManager::init() {
   window->setFramerateLimit(60);
 
   // Initialize camera with the same size as the window
-  camera.setSize(800, 600);
-  camera.setCenter(400, 300);  // Start at center of window
+  // camera.setSize(800, 600);
+  // camera.setCenter(400, 300);  // Start at center of window
 }
 
 void GameManager::run() {
@@ -40,14 +40,14 @@ void GameManager::processEvents() {
 void GameManager::update(float deltaTime) {
   player.update(deltaTime);
   
-  sf::Vector2f playerPos = player.getPosition();
-  camera.setCenter(playerPos);
+  // sf::Vector2f playerPos = player.getPosition();
+  // camera.setCenter(playerPos);
 }
 
 void GameManager::render() {
   window->clear(sf::Color::White);  // white background
 
-  window->setView(camera);
+  // window->setView(camera);
 
   map.render(*window);
 

@@ -9,7 +9,13 @@ public:
     void render(sf::RenderWindow& window) const;
     bool isBlocked(const sf::FloatRect& hitbox) const;
 
+    int getWidth();
+    int getHeight();
+
 private:
+    int width;
+    int height;
+
     struct Rock {
         sf::Sprite sprite;
         sf::FloatRect hitbox;

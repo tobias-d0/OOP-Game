@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Map::Map() {
+Map::Map() : width(720*16), height(480*16) {
   std::cout << "Map started" << std::endl;
   if (!rockTexture.loadFromFile(ROCK_TEXTURE_PATH)) {
     std::cerr << "Error loading rock texture from " << ROCK_TEXTURE_PATH
@@ -21,7 +21,7 @@ Map::Map() {
   for (int i = 0; i < 5; ++i) {
     Rock rock;
     rock.sprite.setTexture(rockTexture);
-    rock.sprite.setPosition(i * 300.f, i * 200.f);
+    rock.sprite.setPosition(i * 50.f, i * 20.f);
     rock.hitbox = rock.sprite.getGlobalBounds();
     rocks.push_back(rock);
   }
@@ -44,3 +44,6 @@ bool Map::isBlocked(const sf::FloatRect& hitbox) const {
   }
   return false;
 }
+
+int Map::getWidth() { return width; }
+int Map::getHeight() { return height; }
