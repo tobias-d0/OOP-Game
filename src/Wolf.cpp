@@ -18,7 +18,6 @@ void Wolf::howl() {
 }
 
 void Wolf::update(float deltaTime) {
-    // Optional: patrol logic
 }
 
 void Wolf::render(sf::RenderWindow& window) {

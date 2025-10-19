@@ -18,7 +18,6 @@ void Seal::dive() {
 }
 
 void Seal::update(float deltaTime) {
-    // Optional: swim logic
 }
 
 void Seal::render(sf::RenderWindow& window) {

@@ -18,7 +18,6 @@ void PolarBear::roar() {
 }
 
 void PolarBear::update(float deltaTime) {
-    // Optional: movement or AI
 }
 
 void PolarBear::render(sf::RenderWindow& window) {
