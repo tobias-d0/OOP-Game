@@ -2,8 +2,8 @@
 #include <iostream>
 
 Seal::Seal() {
-    if (!texture.loadFromFile("seal.png")) {
-        std::cout << "Error loading seal.png" << std::endl;
+    if (!texture.loadFromFile("Seal.png")) {
+        std::cout << "Error loading Seal.png" << std::endl;
     }
     sprite.setTexture(texture);
 }

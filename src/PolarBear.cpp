@@ -2,8 +2,8 @@
 #include <iostream>
 
 PolarBear::PolarBear() {
-    if (!texture.loadFromFile("polar_bear.png")) {
-        std::cout << "Error loading polar_bear.png" << std::endl;
+    if (!texture.loadFromFile("PolarBear.png")) {
+        std::cout << "Error loading PolarBear.png" << std::endl;
     }
     sprite.setTexture(texture);
 }

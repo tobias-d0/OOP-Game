@@ -2,8 +2,8 @@
 #include <iostream>
 
 Wolf::Wolf() {
-    if (!texture.loadFromFile("wolf.png")) {
-        std::cout << "Error loading wolf.png" << std::endl;
+    if (!texture.loadFromFile("Wolf.png")) {
+        std::cout << "Error loading Wolf.png" << std::endl;
     }
     sprite.setTexture(texture);
 }
