@@ -1,11 +1,12 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include "Item.h"
 
 class Inventory {
  private:
-  Item** items;
+  std::vector<Item*> items;
 
  public:
   void addItem(Item* item);

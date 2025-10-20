@@ -15,10 +15,7 @@ void ItemSpawner::spawnItem(Item* item) {
         float x = static_cast<float>(std::rand() % static_cast<int>(mapWidth));
         float y = static_cast<float>(std::rand() % static_cast<int>(mapHeight));
 
-        // Create a small hitbox for the item
-        sf::FloatRect itemRect({x, y}, {32.f, 32.f}); // item size
-
-        if (!map.isBlocked(itemRect)) {
+        if (!map.isBlocked(item->getHitbox())) {
             item->setPosition({x, y});
             activeItems.push_back(item);
             placed = true;
