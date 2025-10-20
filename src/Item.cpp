@@ -28,6 +28,10 @@ void Item::render(sf::RenderWindow &window)
   }
 }
 
+std::string Item::getName(){
+  return name;
+}
+
 void Item::setTexture(const std::string &path)
 {
   if (!texture.loadFromFile(path))

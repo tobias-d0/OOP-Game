@@ -20,6 +20,7 @@ public:
     void setPosition(sf::Vector2f position);
     virtual void useItem() = 0;
     void render(sf::RenderWindow &window);
+    std::string getName();
 
     void setTexture(const std::string &path);
 };
