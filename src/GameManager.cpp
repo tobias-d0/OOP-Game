@@ -7,6 +7,7 @@
 #include "Entity.h"
 #include "HealthOverlay.h"
 #include "HungerOverlay.h"
+#include "Enemy.h"
 
 GameManager::GameManager() : map(), player(map), health({0, 0}), hunger({100, 0})
 {
@@ -107,4 +108,59 @@ GameManager::~GameManager()
     delete window; // free memory
     window = nullptr;
   }
+}
+
+void GameManager::addEnemy(Enemy* e) {
+    enemies.push_back(e);
+}
+
+void GameManager::removeEnemy(Enemy* e) {
+    pendingRemovals.push_back(e);
+}
+
+void GameManager::addProjectile(Entity* p) {
+    projectiles.push_back(p);
+}
+
+void GameManager::removeProjectile(Entity* p) {
+    pendingProjRemovals.push_back(p);
+}
+
+void GameManager::spawnPolarBearAt(const sf::Vector2f& pos) {
+    PolarBear* pb = new PolarBear(player);
+    pb->setPosition(pos);
+    addEnemy(pb);
+    std::cout << "PolarBear spawned at (" << pos.x << ", " << pos.y << ")\n";
+}
+
+void GameManager::update(float dt) {
+    // update enemies
+    for (Enemy* e : enemies) {
+        if (e) e->update(dt);
+    }
+
+    // update projectiles
+    for (Entity* p : projectiles) {
+        if (p) p->update(dt);
+    }
+
+    // cleanup enemies
+    for (Enemy* rem : pendingRemovals) {
+        auto it = std::find(enemies.begin(), enemies.end(), rem);
+        if (it != enemies.end()) {
+            delete *it;
+            enemies.erase(it);
+        }
+    }
+    pendingRemovals.clear();
+
+    // cleanup projectiles
+    for (Entity* rem : pendingProjRemovals) {
+        auto it = std::find(projectiles.begin(), projectiles.end(), rem);
+        if (it != projectiles.end()) {
+            delete *it;
+            projectiles.erase(it);
+        }
+    }
+    pendingProjRemovals.clear();
 }

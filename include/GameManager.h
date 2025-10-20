@@ -17,6 +17,13 @@ class GameManager {
   void update(float deltaTime);
   void render();
 
+  void addEnemy(Enemy* e);
+  void removeEnemy(Enemy* e); // marks for deletion
+  void spawnPolarBearAt(const sf::Vector2f& pos);
+
+  void addProjectile(Entity* p);
+  void removeProjectile(Entity* p);  
+
   sf::RenderWindow* window;
   sf::Clock* gameClock;
   sf::Clock* framesClock;
