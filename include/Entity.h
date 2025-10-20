@@ -23,5 +23,6 @@ public:
   sf::FloatRect getHitbox() const { return sprite.getGlobalBounds(); }
   bool isAlive() const { return health > 0; }
   int getHealth() const { return health; }
+  void setHealth(int health) { this->health = health; }
   void setTexture(const std::string &path);
 };

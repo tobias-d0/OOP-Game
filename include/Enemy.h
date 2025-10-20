@@ -1,11 +1,18 @@
 #pragma once
-
 #include "Entity.h"
+#include <string>
 
 class Enemy : public Entity {
- private:
-  int damage;
-  public:
-  int get_damage();
-  void set_damage(int damage);
+protected:
+    int damage;
+    std::string loot;
+
+public:
+    Enemy();
+
+    int getDamage() const;
+    void setDamage(int dmg);
+    void dropLoot() const;
+
+    virtual void takeDamage(int amount);
 };
