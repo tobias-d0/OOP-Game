@@ -1,11 +1,31 @@
-CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Iinclude
+# Compiler
+CXX = clang++
+CXXFLAGS = -std=c++17 -Wall -Iinclude -I./SFML-2.6.0/include
 
-SRC = src/*.cpp
-OUT = ArcticSurvival
+# Source files
+SRC = $(wildcard src/*.cpp) main.cpp
+OBJ = $(SRC:.cpp=.o)
+TARGET = ArcticSurvival
 
-all:
-	$(CXX) $(CXXFLAGS) $(SRC) -o $(OUT) -lsfml-graphics -lsfml-window -lsfml-system
+# Link directly to dylib files
+LDFLAGS = ./SFML-2.6.0/lib/libsfml-graphics.2.6.0.dylib \
+          ./SFML-2.6.0/lib/libsfml-window.2.6.0.dylib \
+          ./SFML-2.6.0/lib/libsfml-system.2.6.0.dylib \
+          ./SFML-2.6.0/lib/libsfml-audio.2.6.0.dylib \
+          ./SFML-2.6.0/lib/libsfml-network.2.6.0.dylib
 
+# Build target
+all: $(TARGET)
+
+$(TARGET): $(OBJ)
+	$(CXX) $(OBJ) -o $(TARGET) $(LDFLAGS)
+
+# Compile source files
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Clean
 clean:
-	rm -f $(OUT)
+	rm -f $(OBJ) $(TARGET)
+
+.PHONY: all clean
