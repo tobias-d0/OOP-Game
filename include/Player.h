@@ -1,29 +1,59 @@
 #pragma once
+
+#include <SFML/Audio.hpp>
+
 #include "Entity.h"
 #include "Map.h"
 #include "Inventory.h"
 
-class Player : public Entity {
- private:
+enum class PlayerState
+{
+  Idle,
+  Walking
+};
+
+class Player : public Entity
+{
+private:
   sf::Vector2f velocity;
-  float speed = 200.f;
   int hunger;
   int warmth;
   Inventory inventory;
-  Map& map;
-  // In Player.h, add:
-  sf::RectangleShape shape;
+  Map &map;
 
+  bool damageImmune = false;
+  sf::Clock immuneClock;
+  float immuneDuration = 1.f; // 1 seconds of invulnerability
 
-  // Replace with your asset path
-  const std::string PLAYER_TEXTURE_PATH = "assets/textures/Spear.png";
+  sf::Clock hungerClock;
+  float hungerDrainDuration = 60.f; // every 60 seconds a hunger bar drains
 
- public:
-  Player(Map& map);
+  sf::Texture idleTexture;
+  sf::Texture walkTexture;
 
-  void handleInput(const sf::Event& event);
+  PlayerState state = PlayerState::Idle;
+  bool facingRight = true;
+
+  const std::string PLAYER_IDLE_PATH = "assets/textures/PlayerIdle.png";
+  const std::string PLAYER_WALK_PATH = "assets/textures/PlayerWalk.png";
+
+  sf::Clock animationClock;
+  float animationInterval = 0.2f;
+
+  sf::SoundBuffer damageBuffer;
+  sf::SoundBuffer walkBuffer;
+  sf::Sound damageSound;
+  sf::Sound walkSound;
+
+  sf::Clock walkSoundClock;
+  float walkSoundInterval = 4.4f; // audio duration
+
+public:
+  Player(Map &map);
+
+  void handleInput(const sf::Event &event);
   void update(float deltaTime) override;
-  void render(sf::RenderWindow& window) override;
+  void takeDamage(int damage) override;
 
   void pickUpItem();
   void useItem();

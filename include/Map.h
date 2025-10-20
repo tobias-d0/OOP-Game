@@ -6,27 +6,19 @@ class Map {
 public:
     Map();
 
-    void render(sf::RenderWindow& window) const;
+    void render(sf::RenderWindow& window, const sf::View& view);
     bool isBlocked(const sf::FloatRect& hitbox) const;
 
-    int getWidth();
-    int getHeight();
+    int getWidth() const;
+    int getHeight() const;
 
 private:
     int width;
     int height;
 
-    struct Rock {
-        sf::Sprite sprite;
-        sf::FloatRect hitbox;
-    };
-
-    std::vector<Rock> rocks;
-    sf::Texture rockTexture;
     sf::Texture snowTexture;
-    sf::Sprite backgroundTile;
+    sf::Sprite background;
 
-    // Replace with your asset paths
-    const std::string ROCK_TEXTURE_PATH = "assets/textures/RockSimple.png";
-    const std::string SNOW_TEXTURE_PATH = "assets/textures/SnowPile.png";
+    const std::string SNOW_TEXTURE_PATH = "assets/textures/SnowTile.png";
 };
+

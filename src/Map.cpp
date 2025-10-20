@@ -2,48 +2,44 @@
 
 #include <iostream>
 
-Map::Map() : width(720*16), height(480*16) {
-  std::cout << "Map started" << std::endl;
-  if (!rockTexture.loadFromFile(ROCK_TEXTURE_PATH)) {
-    std::cerr << "Error loading rock texture from " << ROCK_TEXTURE_PATH
-              << "\n";
-  }
-  if (!snowTexture.loadFromFile(SNOW_TEXTURE_PATH)) {
-    std::cerr << "Error loading snow texture from " << SNOW_TEXTURE_PATH
-              << "\n";
+Map::Map() : width(1600), height(1200), background(snowTexture)
+{
+  if (!snowTexture.loadFromFile(SNOW_TEXTURE_PATH))
+  {
+    std::cerr << "Error loading snow texture from " << SNOW_TEXTURE_PATH << "\n";
   }
 
-  // Create a tiled background (optional; here a single white tile)
-  backgroundTile.setTexture(snowTexture);
-  backgroundTile.setScale(10.f, 10.f);  // Cover more area
+  snowTexture.setRepeated(true);
 
-  // Example rocks (obstacles)
-  for (int i = 0; i < 5; ++i) {
-    Rock rock;
-    rock.sprite.setTexture(rockTexture);
-    rock.sprite.setPosition(i * 50.f, i * 20.f);
-    rock.hitbox = rock.sprite.getGlobalBounds();
-    rocks.push_back(rock);
-  }
-  std::cout << "Map initialised" << std::endl;
+  background.setTexture(snowTexture);
 }
 
-void Map::render(sf::RenderWindow& window) const {
-  // Just a single snow tile background for now
-  window.draw(backgroundTile);
+void Map::render(sf::RenderWindow &window, const sf::View &view)
+{
+  sf::Vector2f center = view.getCenter();
+  sf::Vector2f size = view.getSize();
 
-  // Draw rocks
-  for (const auto& rock : rocks) {
-    window.draw(rock.sprite);
-  }
+  // Calculate top-left corner of visible area
+  sf::Vector2f topLeft(center.x - size.x / 2.f, center.y - size.y / 2.f);
+
+  // Position sprite at top-left of view
+  background.setPosition(topLeft);
+
+  // Offset the texture rect so pattern stays centered visually
+  background.setTextureRect(sf::IntRect(
+      sf::Vector2i(static_cast<int>(topLeft.x), static_cast<int>(topLeft.y)),
+      sf::Vector2i(static_cast<int>(size.x), static_cast<int>(size.y))));
+
+  window.draw(background);
 }
 
-bool Map::isBlocked(const sf::FloatRect& hitbox) const {
-  for (const auto& rock : rocks) {
-    if (rock.hitbox.intersects(hitbox)) return true;
-  }
+bool Map::isBlocked(const sf::FloatRect &hitbox) const
+{
+  // for (const auto& rock : rocks) {
+  //   if (rock.hitbox.intersects(hitbox)) return true;
+  // }
   return false;
 }
 
-int Map::getWidth() { return width; }
-int Map::getHeight() { return height; }
+int Map::getWidth() const { return width; }
+int Map::getHeight() const { return height; }
