@@ -1,25 +1,13 @@
-#pragma once
-#include <vector>
-#include <memory>
-#include <cstdlib>
-#include <ctime>
-#include "Item.h"
-#include "Map.h"
+#include <SFML/Graphics.hpp>
 
-class ItemSpawner {
+class Item
+{
 private:
-    const Map& map;  // Reference to the game map
-    std::vector<std::shared_ptr<Item>> activeItems;
-
-    float mapWidth;
-    float mapHeight;
+    std::string name;
+    bool isVisible;
 
 public:
-    ItemSpawner(const Map& gameMap);
-
-    void spawnItem(std::shared_ptr<Item> item);
-    void render(sf::RenderWindow& window);
-    void clearItems();
-
-    const std::vector<std::shared_ptr<Item>>& getActiveItems() const;
+    virtual void use() = 0;
+    void setPosition(sf::Vector2f position);
+    void render(sf::RenderWindow &window);
 };

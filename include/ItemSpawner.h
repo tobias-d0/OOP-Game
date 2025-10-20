@@ -1,16 +1,25 @@
-#pragma once 
-
+#pragma once
+#include <vector>
+#include <memory>
 #include <cstdlib>
 #include <ctime>
 #include "Item.h"
 #include "Map.h"
 
-class ItemSpawner{
-    private:
-        int mapHeight;
-        int mapWidth;
-        std::vector<Item> spawnedItems;
-    public:
-        ItemSpawner(const Map& map);
-        void spawnItem(Item* item );
+class ItemSpawner {
+private:
+    const Map& map;  // Reference to the game map
+    std::vector<Item*> activeItems;
+
+    float mapWidth;
+    float mapHeight;
+
+public:
+    ItemSpawner(const Map& gameMap);
+
+    void spawnItem(Item* item);
+    void render(sf::RenderWindow& window);
+    void clearItems();
+
+    const std::vector<Item*>& getActiveItems() const;
 };

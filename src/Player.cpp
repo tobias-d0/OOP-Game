@@ -66,6 +66,9 @@ void Player::handleInput(const sf::Event &event)
 
 void Player::update(float deltaTime)
 {
+  if (getHealth() <= 0) {
+    return;
+  }
   // Movement
   position += velocity * deltaTime;
   sprite.setPosition(position);
