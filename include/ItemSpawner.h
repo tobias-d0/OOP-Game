@@ -9,7 +9,7 @@ class ItemSpawner{
     private:
         int mapHeight;
         int mapWidth;
-        std::vector<Item*> spawnedItems;
+        std::vector<Item> spawnedItems;
     public:
         ItemSpawner(const Map& map);
         void spawnItem(Item* item );

@@ -19,7 +19,3 @@ void Wolf::howl() {
 
 void Wolf::update(float deltaTime) {
 }
-
-void Wolf::render(sf::RenderWindow& window) {
-    window.draw(sprite);
-}

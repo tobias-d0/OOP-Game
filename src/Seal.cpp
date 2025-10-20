@@ -19,7 +19,3 @@ void Seal::dive() {
 
 void Seal::update(float deltaTime) {
 }
-
-void Seal::render(sf::RenderWindow& window) {
-    window.draw(sprite);
-}

@@ -7,5 +7,4 @@ public:
     void takeDamage(int amount) override;
     void howl();
     void update(float deltaTime) override;
-    void render(sf::RenderWindow& window) override;
 };

@@ -19,7 +19,3 @@ void PolarBear::roar() {
 
 void PolarBear::update(float deltaTime) {
 }
-
-void PolarBear::render(sf::RenderWindow& window) {
-    window.draw(sprite);
-}
