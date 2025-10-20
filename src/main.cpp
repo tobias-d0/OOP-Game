@@ -52,5 +52,13 @@ int main() {
 //         window.display();
 //     }
 
+// Wolf* w = new Wolf(GameWorld::get().getPlayer());
+//w->setPosition({100, 100});
+//GameWorld::get().addEnemy(w);
+
+//Seal* s = new Seal(GameWorld::get().getPlayer());
+//s->setPosition({200, 200});
+//GameWorld::get().addEnemy(s);
+
 //     return 0;
 // }

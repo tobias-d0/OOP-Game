@@ -1,11 +1,24 @@
 #pragma once
+#include "Entity.h"
+#include <SFML/System/Clock.hpp>
 
-#include "Item.h"
+class Spear : public Entity {
+public:
+    // initialPos: world position where spear is thrown from
+    // angleRad: angle in radians above horizontal
+    // speed: initial speed magnitude
+    // lifeTime: max lifetime (s)
+    Spear(const sf::Vector2f& initialPos, float angleRad, float speed, Player* owner);
 
-class Spear : public Item {
- private:
-  int damage;
+    void update(float deltaTime) override;
+    void render(sf::RenderWindow& window) override;
 
- public:
-  
+private:
+    sf::Vector2f velocity; // current velocity (px/sec)
+    float gravity = 980.f; // px/s^2 (tweak as needed)
+    float lifeTime = 5.f;
+    float elapsed = 0.f;
+    Player* owner = nullptr;
+
+    void checkCollisions();
 };
