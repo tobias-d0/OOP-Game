@@ -1,5 +1,4 @@
 #include "Spear.h"
-#include "GameManager.h"
 #include "Enemy.h"
 #include "PolarBear.h"
 #include <iostream>
