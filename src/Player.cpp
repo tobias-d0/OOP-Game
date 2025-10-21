@@ -66,12 +66,34 @@ void Player::handleInput(const sf::Event &event)
 
 void Player::update(float deltaTime)
 {
-  if (getHealth() <= 0) {
+  if (getHealth() <= 0)
+  {
     return;
   }
-  // Movement
-  position += velocity * deltaTime;
+  // --- Movement ---
+  sf::Vector2f oldPosition = position;
+
+  // Try moving on X axis
+  position.x += velocity.x * deltaTime;
   sprite.setPosition(position);
+
+  // If collision, revert X movement
+  if (map.isBlocked(sprite.getGlobalBounds()))
+  {
+    position.x = oldPosition.x;
+    sprite.setPosition(position);
+  }
+
+  // Try moving on Y axis
+  position.y += velocity.y * deltaTime;
+  sprite.setPosition(position);
+
+  // If collision, revert Y movement
+  if (map.isBlocked(sprite.getGlobalBounds()))
+  {
+    position.y = oldPosition.y;
+    sprite.setPosition(position);
+  }
 
   // Animation frame switching
   if (state == PlayerState::Walking)
@@ -86,7 +108,8 @@ void Player::update(float deltaTime)
 
       animationClock.restart();
     }
-    if (walkSound.getStatus() == sf::Sound::Status::Stopped) {
+    if (walkSound.getStatus() == sf::Sound::Status::Stopped)
+    {
       walkSound.play();
     }
   }
@@ -151,14 +174,17 @@ void Player::setWarmth(int warmth)
   this->warmth = warmth;
 }
 
-bool Player::pickUpItem(Item* item) {
-  if (inventory.isFull()) {
-      return false;
+bool Player::pickUpItem(Item *item)
+{
+  if (inventory.isFull())
+  {
+    return false;
   }
   inventory.addItem(item);
   return true;
 }
 
-void Player::displayInventory() {
+void Player::displayInventory()
+{
   inventory.displayInventory();
 }

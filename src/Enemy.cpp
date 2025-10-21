@@ -18,7 +18,3 @@ void Enemy::takeDamage(int amount) {
         alive = false;
     }
 }
-
-void Enemy::render(sf::RenderWindow& window) {
-    window.draw(sprite);
-}

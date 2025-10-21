@@ -21,7 +21,6 @@ public:
 
     virtual void takeDamage(int amount) override;
     virtual void update(float deltaTime) override = 0;
-    virtual void render(sf::RenderWindow& window) override;
 
     bool isAlive() const { return alive; }
     void setAlive(bool a) { alive = a; }

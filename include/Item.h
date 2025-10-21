@@ -1,28 +1,23 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include "GameObject.h"
 #include <string>
 
-class Item
+class Item : public GameObject
 {
 protected:
     std::string name;
-    sf::Sprite sprite;
-    sf::Texture texture;
-    sf::Vector2f position;
     sf::Vector2u size;
-    bool isVisible;
 
 public:
-    Item();
+    Item(const std::string &name);
+    Item(const std::string &name, const std::string &texturePath);
+    virtual ~Item() = default;
 
-    sf::Vector2f getPosition() const { return position; }
-    sf::Vector2u getSize() const { return size; }
-    sf::FloatRect getHitbox() const { return sprite.getGlobalBounds(); }
-    virtual void use() = 0;
-    void setPosition(sf::Vector2f position);
+    // Core behaviour
+    virtual void update(float deltaTime) override {}
     virtual void useItem() = 0;
-    void render(sf::RenderWindow &window);
-    std::string getName();
 
-    void setTexture(const std::string &path);
+    // Common accessors
+    std::string getName() const { return name; }
+    sf::Vector2u getSize() const { return size; }
 };

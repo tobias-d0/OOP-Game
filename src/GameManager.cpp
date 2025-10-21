@@ -112,78 +112,78 @@ GameManager::~GameManager()
   }
 }
 
-void GameManager::addEnemy(Enemy* e) {
-    enemies.push_back(e);
-}
+// void GameManager::addEnemy(Enemy* e) {
+//     enemies.push_back(e);
+// }
 
-void GameManager::removeEnemy(Enemy* e) {
-    pendingRemovals.push_back(e);
-}
+// void GameManager::removeEnemy(Enemy* e) {
+//     pendingRemovals.push_back(e);
+// }
 
-void GameManager::addProjectile(Entity* p) {
-    projectiles.push_back(p);
-}
+// void GameManager::addProjectile(Entity* p) {
+//     projectiles.push_back(p);
+// }
 
-void GameManager::removeProjectile(Entity* p) {
-    pendingProjRemovals.push_back(p);
-}
+// void GameManager::removeProjectile(Entity* p) {
+//     pendingProjRemovals.push_back(p);
+// }
 
-void GameManager::spawnPolarBearAt(const sf::Vector2f& pos) {
-    PolarBear* pb = new PolarBear(player);
-    pb->setPosition(pos);
-    addEnemy(pb);
-    std::cout << "PolarBear spawned at (" << pos.x << ", " << pos.y << ")\n";
-}
+// void GameManager::spawnPolarBearAt(const sf::Vector2f& pos) {
+//     PolarBear* pb = new PolarBear(player);
+//     pb->setPosition(pos);
+//     addEnemy(pb);
+//     std::cout << "PolarBear spawned at (" << pos.x << ", " << pos.y << ")\n";
+// }
 
-void GameManager::update(float dt) {
-    // update enemies
-    for (Enemy* e : enemies) {
-        if (e) e->update(dt);
-    }
+// void GameManager::update(float dt) {
+//     // update enemies
+//     for (Enemy* e : enemies) {
+//         if (e) e->update(dt);
+//     }
 
-    // update projectiles
-    for (Entity* p : projectiles) {
-        if (p) p->update(dt);
-    }
+//     // update projectiles
+//     for (Entity* p : projectiles) {
+//         if (p) p->update(dt);
+//     }
 
-    // cleanup enemies
-    for (Enemy* rem : pendingRemovals) {
-        auto it = std::find(enemies.begin(), enemies.end(), rem);
-        if (it != enemies.end()) {
-            delete *it;
-            enemies.erase(it);
-        }
-    }
-    pendingRemovals.clear();
+//     // cleanup enemies
+//     for (Enemy* rem : pendingRemovals) {
+//         auto it = std::find(enemies.begin(), enemies.end(), rem);
+//         if (it != enemies.end()) {
+//             delete *it;
+//             enemies.erase(it);
+//         }
+//     }
+//     pendingRemovals.clear();
 
-    // cleanup projectiles
-    for (Entity* rem : pendingProjRemovals) {
-        auto it = std::find(projectiles.begin(), projectiles.end(), rem);
-        if (it != projectiles.end()) {
-            delete *it;
-            projectiles.erase(it);
-        }
-    }
-    pendingProjRemovals.clear();
-}
+//     // cleanup projectiles
+//     for (Entity* rem : pendingProjRemovals) {
+//         auto it = std::find(projectiles.begin(), projectiles.end(), rem);
+//         if (it != projectiles.end()) {
+//             delete *it;
+//             projectiles.erase(it);
+//         }
+//     }
+//     pendingProjRemovals.clear();
+// }
 
 
-void GameManager::checkItemPickup() {
-  sf::Vector2f playerPos = player.getPosition();
+// void GameManager::checkItemPickup() {
+//   sf::Vector2f playerPos = player.getPosition();
   
-  auto& activeItems = itemSpawner.getActiveItems();
+//   auto& activeItems = itemSpawner.getActiveItems();
   
-  for (int i = 0; i < activeItems.size(); i++) {
-      Item* item = activeItems[i];
-      sf::Vector2f itemPos = item->getPosition();
+//   for (int i = 0; i < activeItems.size(); i++) {
+//       Item* item = activeItems[i];
+//       sf::Vector2f itemPos = item->getPosition();
       
-      if (std::abs(playerPos.x - itemPos.x) < 20.0f && 
-          std::abs(playerPos.y - itemPos.y) < 20.0f) {
+//       if (std::abs(playerPos.x - itemPos.x) < 20.0f && 
+//           std::abs(playerPos.y - itemPos.y) < 20.0f) {
           
-          player.pickUpItem(item);
-          std::cout << "Picked up " << item->getName() << "!" << std::endl;
+//           player.pickUpItem(item);
+//           std::cout << "Picked up " << item->getName() << "!" << std::endl;
           
-          activeItems[i] = nullptr;
-      }
-  }
-}
+//           activeItems[i] = nullptr;
+//       }
+//   }
+// }
