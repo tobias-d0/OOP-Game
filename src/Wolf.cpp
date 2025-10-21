@@ -1,6 +1,5 @@
 #include "Wolf.h"
 #include "Player.h"
-#include "GameManager.h"
 #include <cmath>
 #include <iostream>
 
