@@ -29,7 +29,7 @@ void Spear::update(float deltaTime) {
     checkCollisions();
 
     if (elapsed > lifeTime) {
-        GameWorld::get().removeProjectile(this);
+        GameManager::get().removeProjectile(this);
     }
 }
 
@@ -44,7 +44,7 @@ void Spear::checkCollisions() {
     // To avoid changing GameWorld again, let's query via a temporary method: we'll assume GameWorld has 'enemies' accessible via friend. Simpler: iterate by adding a public accessor.
 
     // I'll implement a minimal public accessor in GameWorld (you can move it).
-    auto& enemiesRef = GameWorld::get().enemies; // note: make 'enemies' public or add accessor (see integration note)
+    auto& enemiesRef = GameManager::get().enemies; // note: make 'enemies' public or add accessor (see integration note)
     for (Enemy* e : enemiesRef) {
         if (!e) continue;
         if (!e->isAlive()) continue;
@@ -54,14 +54,14 @@ void Spear::checkCollisions() {
             if (pb) {
                 pb->setHealth(0);
                 pb->setAlive(false);
-                GameWorld::get().removeEnemy(pb);
+                GameManager::get().removeEnemy(pb);
                 std::cout << "Spear hit polar bear — it's dead!\n";
             } else {
                 // normal enemies take damage
                 e->takeDamage(50); // spear damage to normal enemies
             }
             // remove spear on hit
-            GameWorld::get().removeProjectile(this);
+            GameManager::get().removeProjectile(this);
             return;
         }
     }

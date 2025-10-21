@@ -37,8 +37,8 @@ void Seal::takeDamage(int amount) {
     Enemy::takeDamage(amount);
     if (!isAlive()) {
         // spawn polar bear at seal death position
-        GameWorld::get().spawnPolarBearAt(getPosition());
-        GameWorld::get().removeEnemy(this);
+        GameManager::get().spawnPolarBearAt(getPosition());
+        GameManager::get().removeEnemy(this);
         std::cout << "Seal died — polar bear will spawn.\n";
     }
 }

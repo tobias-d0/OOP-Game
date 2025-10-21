@@ -53,7 +53,7 @@ void Wolf::update(float deltaTime) {
         if (fearClock.getElapsedTime().asSeconds() > fearDuration) {
             // mark for removal
             setAlive(false);
-            GameWorld::get().removeEnemy(this);
+            GameManager::get().removeEnemy(this);
             std::cout << "Wolf despawned after fear duration.\n";
             return;
         }
@@ -83,7 +83,7 @@ void Wolf::takeDamage(int amount) {
     std::cout << "Wolf snarls in pain.\n";
     Enemy::takeDamage(amount);
     if (!isAlive()) {
-        GameWorld::get().removeEnemy(this);
+        GameManager::get().removeEnemy(this);
     }
 }
 
