@@ -37,11 +37,11 @@ class GameManager {
   sf::View camera;
   Map map;
   Player player;
-  ItemSpawner itemSpawner;
-
 
   HealthOverlay health;
   HungerOverlay hunger;
+
+  ItemSpawner itemSpawner;
 
   const unsigned int WINDOW_WIDTH = 720;
   const unsigned int WINDOW_HEIGHT = 480;
