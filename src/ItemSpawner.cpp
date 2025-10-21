@@ -3,7 +3,7 @@
 
 ItemSpawner::ItemSpawner(const Map& gameMap)
     : map(gameMap), mapWidth(gameMap.getWidth()), mapHeight(gameMap.getHeight()) {
-    std::srand(static_cast<unsigned>(std::time(nullptr))); // random seed
+    std::srand(static_cast<unsigned>(std::time(nullptr))); 
 }
 
 void ItemSpawner::spawnItem(Item* item) {
@@ -33,6 +33,6 @@ void ItemSpawner::clearItems() {
     activeItems.clear();
 }
 
-const std::vector<Item*>& ItemSpawner::getActiveItems() const {
+std::vector<Item*>& ItemSpawner::getActiveItems() {
     return activeItems;
 }

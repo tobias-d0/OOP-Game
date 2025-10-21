@@ -21,5 +21,5 @@ public:
     void render(sf::RenderWindow& window);
     void clearItems();
 
-    const std::vector<Item*>& getActiveItems() const;
+    std::vector<Item*>& getActiveItems();
 };

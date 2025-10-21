@@ -150,3 +150,15 @@ void Player::setWarmth(int warmth)
 {
   this->warmth = warmth;
 }
+
+bool Player::pickUpItem(Item* item) {
+  if (inventory.isFull()) {
+      return false;
+  }
+  inventory.addItem(item);
+  return true;
+}
+
+void Player::displayInventory() {
+  inventory.displayInventory();
+}

@@ -3,12 +3,16 @@
 
 
 #include "Entity.h"
+#include "Enemy.h" 
 
 #include "Map.h"
 #include "Player.h"
 
 #include "HealthOverlay.h"
 #include "HungerOverlay.h"
+
+#include "Item.h"
+#include "ItemSpawner.h"
 
 class GameManager {
  private:
@@ -20,6 +24,7 @@ class GameManager {
   void addEnemy(Enemy* e);
   void removeEnemy(Enemy* e); // marks for deletion
   void spawnPolarBearAt(const sf::Vector2f& pos);
+  void checkItemPickup();
 
   void addProjectile(Entity* p);
   void removeProjectile(Entity* p);  
@@ -32,6 +37,8 @@ class GameManager {
   sf::View camera;
   Map map;
   Player player;
+  ItemSpawner itemSpawner;
+
 
   HealthOverlay health;
   HungerOverlay hunger;

@@ -55,7 +55,6 @@ public:
   void update(float deltaTime) override;
   void takeDamage(int damage) override;
 
-  void pickUpItem();
   void useItem();
   void craftItem();
 
@@ -63,4 +62,8 @@ public:
   void setHunger(int hunger);
   int getWarmth();
   void setWarmth(int warmth);
+
+  Inventory& getInventory() { return inventory; }
+  bool pickUpItem(Item* item);
+  void displayInventory();
 };

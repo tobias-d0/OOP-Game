@@ -62,3 +62,27 @@ int main() {
 
 //     return 0;
 // }
+
+
+
+    //Item* matches = new Item("Matches", "resource"); //need to craft to steer away wolves
+    //Item* oilCan = new Item("Jerry Can of Oil", "resource"); //need to craft to steer away wolves
+    //Item* stick = new Item("Stick", "resource"); //need to craft to steer away wolves
+    //Item* electronics = new Item("Electronics", "component"); //need to have to fix radio
+    //Item* electronicsBook = new Item("Electronics Book", "manual"); //need to have to fix radio
+
+    // texure section for each - toby you will have to do this part as i am unsure how to load textures in window etc
+
+    // spawn items in world
+    // game.getItemSpawner().spawnItem(matches);
+    // game.getItemSpawner().spawnItem(oilCan);
+    // game.getItemSpawner().spawnItem(stick);
+    // game.getItemSpawner().spawnItem(electronics);
+    // game.getItemSpawner().spawnItem(electronicsBook);
+    
+    //deleting ptr to memory at end of game
+    //delete matches;
+    //delete oilCan;
+    //delete stick;
+    //delete electronics;
+    //delete electronicsBook;

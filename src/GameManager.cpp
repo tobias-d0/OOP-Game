@@ -8,8 +8,10 @@
 #include "HealthOverlay.h"
 #include "HungerOverlay.h"
 #include "Enemy.h"
+#include "Item.h"
+#include "ItemSpawner.h"
 
-GameManager::GameManager() : map(), player(map), health({0, 0}), hunger({100, 0})
+GameManager::GameManager() : map(), player(map), health({0, 0}), hunger({100, 0}), itemSpawner(map)
 {
   init();
 }
@@ -163,4 +165,25 @@ void GameManager::update(float dt) {
         }
     }
     pendingProjRemovals.clear();
+}
+
+
+void GameManager::checkItemPickup() {
+  sf::Vector2f playerPos = player.getPosition();
+  
+  auto& activeItems = itemSpawner.getActiveItems();
+  
+  for (int i = 0; i < activeItems.size(); i++) {
+      Item* item = activeItems[i];
+      sf::Vector2f itemPos = item->getPosition();
+      
+      if (std::abs(playerPos.x - itemPos.x) < 20.0f && 
+          std::abs(playerPos.y - itemPos.y) < 20.0f) {
+          
+          player.pickUpItem(item);
+          std::cout << "Picked up " << item->getName() << "!" << std::endl;
+          
+          activeItems[i] = nullptr;
+      }
+  }
 }
