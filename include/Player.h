@@ -48,6 +48,8 @@ private:
   sf::Clock walkSoundClock;
   float walkSoundInterval = 4.4f; // audio duration
 
+  int itemNumberSelected = -1; // -1 is no item
+
 public:
   Player(Map &map);
 
@@ -65,5 +67,10 @@ public:
 
   Inventory& getInventory() { return inventory; }
   bool pickUpItem(Item* item);
+  Item* dropItem();
   void displayInventory();
+  int getItemIndexSelected();
+  Item* getItemSelected();
+  Item* dropSelectedItem();
+
 };

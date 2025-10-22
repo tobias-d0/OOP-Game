@@ -9,9 +9,12 @@
 #include "HungerOverlay.h"
 #include "Enemy.h"
 #include "Item.h"
-#include "ItemSpawner.h"
+#include "Spawner.h"
 
-GameManager::GameManager() : map(), player(map), health({0, 0}), hunger({100, 0}), itemSpawner(map)
+#include "Torch.h"
+#include "Spear.h"
+
+GameManager::GameManager() : map(), player(map), health({0, 0}), hunger({100, 0}), spawner(map)
 {
   init();
 }
@@ -45,6 +48,8 @@ void GameManager::init()
 
   health.setValue(player.getHealth());
   hunger.setValue(player.getHunger());
+
+  spawnItems();
 }
 
 void GameManager::run()
@@ -78,10 +83,20 @@ void GameManager::update(float deltaTime)
     entity->update(deltaTime);
   }
 
+  for (Item *item : items)
+  {
+    item->update(deltaTime);
+  }
+
   camera.setCenter(player.getPosition());
 
   health.setValue(player.getHealth());
   hunger.setValue(player.getHunger());
+
+  checkItemDropped();
+  checkItemPickup();
+
+  cleanupGameObjects();
 }
 
 void GameManager::render()
@@ -95,6 +110,11 @@ void GameManager::render()
     entity->render(*window);
   }
 
+  for (Item *item : items)
+  {
+    item->render(*window);
+  }
+
   window->setView(window->getDefaultView());
   health.render(*window);
   hunger.render(*window);
@@ -102,8 +122,126 @@ void GameManager::render()
   window->display();
 }
 
+void GameManager::addEntity(Entity *e)
+{
+  entities.push_back(e);
+}
+
+void GameManager::removeEntity(Entity *e)
+{
+  e->markForRemoval();
+}
+
+void GameManager::addItem(Item *i)
+{
+  items.push_back(i);
+}
+
+void GameManager::removeItem(Item *i)
+{
+  i->markForRemoval();
+}
+
+void GameManager::checkItemPickup()
+{
+  sf::FloatRect playerBox = player.getHitbox();
+
+  for (int i = items.size() - 1; i >= 0; --i)
+  {
+    Item *item = items[i];
+    if (!item || !item->isActive())
+      continue;
+
+    sf::FloatRect itemBox = item->getHitbox();
+
+    if (playerBox.findIntersection(itemBox))
+    {
+      // They overlap!
+      player.pickUpItem(item);
+
+      item->markForRemoval();
+      std::cout << "Picked up " << item->getName() << "\n";
+    }
+  }
+}
+
+void GameManager::checkItemDropped()
+{
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Q))
+  {
+    Item *dropped = player.dropSelectedItem();
+    if (dropped)
+    {
+      dropped->setPosition(player.getPosition());
+      dropped->setActive(true);
+      dropped->setVisible(true);
+      addItem(dropped);
+    }
+  }
+}
+
+void GameManager::cleanupGameObjects()
+{
+  // Clean up entities marked for removal
+  for (int i = entities.size() - 1; i >= 0; --i)
+  {
+    if (entities[i]->isPendingRemoval())
+    {
+      delete entities[i];
+      entities.erase(entities.begin() + i);
+    }
+  }
+
+  // Clean up items marked for removal (but don't delete inventory ones)
+  for (int i = items.size() - 1; i >= 0; --i)
+  {
+    if (items[i]->isPendingRemoval())
+    {
+      // DO NOT delete items — player might have it in inventory
+      items.erase(items.begin() + i);
+    }
+  }
+}
+
+void GameManager::spawnItems()
+{
+  const int NUM_TORCHES = 5;
+  // const int NUM_SPEARS = 3;
+
+  // Spawn Torches
+  for (int i = 0; i < NUM_TORCHES; ++i)
+  {
+    Torch *torch = new Torch();
+
+    if (spawner.placeItem(torch))
+    {
+      items.push_back(torch);
+    }
+    else
+    {
+      delete torch;
+    }
+  }
+
+  // // Spawn Spears
+  // for (int i = 0; i < NUM_SPEARS; ++i)
+  // {
+  //   Spear *spear = new Spear();
+
+  //   if (spawner.placeItem(spear))
+  //   {
+  //     items.push_back(spear);
+  //   }
+  //   else
+  //   {
+  //     delete spear;
+  //   }
+  // }
+}
+
 GameManager::~GameManager()
 {
+  cleanupGameObjects();
   if (window)
   {
     window->close();
@@ -111,79 +249,3 @@ GameManager::~GameManager()
     window = nullptr;
   }
 }
-
-// void GameManager::addEnemy(Enemy* e) {
-//     enemies.push_back(e);
-// }
-
-// void GameManager::removeEnemy(Enemy* e) {
-//     pendingRemovals.push_back(e);
-// }
-
-// void GameManager::addProjectile(Entity* p) {
-//     projectiles.push_back(p);
-// }
-
-// void GameManager::removeProjectile(Entity* p) {
-//     pendingProjRemovals.push_back(p);
-// }
-
-// void GameManager::spawnPolarBearAt(const sf::Vector2f& pos) {
-//     PolarBear* pb = new PolarBear(player);
-//     pb->setPosition(pos);
-//     addEnemy(pb);
-//     std::cout << "PolarBear spawned at (" << pos.x << ", " << pos.y << ")\n";
-// }
-
-// void GameManager::update(float dt) {
-//     // update enemies
-//     for (Enemy* e : enemies) {
-//         if (e) e->update(dt);
-//     }
-
-//     // update projectiles
-//     for (Entity* p : projectiles) {
-//         if (p) p->update(dt);
-//     }
-
-//     // cleanup enemies
-//     for (Enemy* rem : pendingRemovals) {
-//         auto it = std::find(enemies.begin(), enemies.end(), rem);
-//         if (it != enemies.end()) {
-//             delete *it;
-//             enemies.erase(it);
-//         }
-//     }
-//     pendingRemovals.clear();
-
-//     // cleanup projectiles
-//     for (Entity* rem : pendingProjRemovals) {
-//         auto it = std::find(projectiles.begin(), projectiles.end(), rem);
-//         if (it != projectiles.end()) {
-//             delete *it;
-//             projectiles.erase(it);
-//         }
-//     }
-//     pendingProjRemovals.clear();
-// }
-
-
-// void GameManager::checkItemPickup() {
-//   sf::Vector2f playerPos = player.getPosition();
-  
-//   auto& activeItems = itemSpawner.getActiveItems();
-  
-//   for (int i = 0; i < activeItems.size(); i++) {
-//       Item* item = activeItems[i];
-//       sf::Vector2f itemPos = item->getPosition();
-      
-//       if (std::abs(playerPos.x - itemPos.x) < 20.0f && 
-//           std::abs(playerPos.y - itemPos.y) < 20.0f) {
-          
-//           player.pickUpItem(item);
-//           std::cout << "Picked up " << item->getName() << "!" << std::endl;
-          
-//           activeItems[i] = nullptr;
-//       }
-//   }
-// }

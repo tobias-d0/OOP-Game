@@ -1,7 +1,7 @@
 #include "Item.h"
 
 Item::Item(const std::string &name)
-    : GameObject(), name(name), size(0, 0)
+    : GameObject("assets/textures/placeholder.png"), name(name)
 {
 }
 

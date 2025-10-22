@@ -38,4 +38,5 @@ public:
   sf::FloatRect getHitbox() const;
 
   void setTexture(const std::string &path);
+  void setScale(sf::Vector2f scale);
 };

@@ -14,6 +14,7 @@ class Inventory {
 
   void addItem(Item* item);
   bool hasItem(std::string name);
+  bool hasItem(int index);
 
   void removeItem(Item* item);
   void removeItem(int index);
@@ -21,6 +22,7 @@ class Inventory {
 
   bool isFull();
   int getSize();
+  Item* getItem(int index);
   void displayInventory();
 
   ~Inventory();

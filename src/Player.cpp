@@ -148,7 +148,9 @@ void Player::takeDamage(int damage)
 {
   if (!damageImmune && health > 0)
   {
-    health - damage >= 0 ? health -= damage : health = 0;
+    health -= damage;
+    if (health < 0)
+      health = 0;
     damageImmune = true;
     immuneClock.restart();
 
@@ -187,4 +189,31 @@ bool Player::pickUpItem(Item *item)
 void Player::displayInventory()
 {
   inventory.displayInventory();
+}
+
+int Player::getItemIndexSelected()
+{
+  return itemNumberSelected;
+}
+
+Item *Player::getItemSelected()
+{
+  if (itemNumberSelected < 0)
+    return nullptr;
+  return inventory.getItem(itemNumberSelected);
+}
+
+Item *Player::dropSelectedItem()
+{
+  int index = getItemIndexSelected();
+  if (index < 0)
+    return nullptr;
+
+  Item *item = inventory.getItem(index);
+  if (item)
+  {
+    inventory.removeItem(index);
+    return item;
+  }
+  return nullptr;
 }

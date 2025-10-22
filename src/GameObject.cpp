@@ -91,7 +91,21 @@ sf::FloatRect GameObject::getHitbox() const
 
 void GameObject::setTexture(const std::string &path)
 {
-  if (!texture.loadFromFile(path))
-    throw std::runtime_error("Failed to load texture: " + path);
-  sprite.setTexture(texture);
+    if (!texture.loadFromFile(path))
+    {
+        throw std::runtime_error("Failed to load texture: " + path);
+    }
+
+    sprite.setTexture(texture, true);
+
+    // Recalculate size and origin
+    size_t width = texture.getSize().x;
+    size_t height = texture.getSize().y;
+    sprite.setOrigin({width / 2.f, height / 2.f}); // ✅ centers sprite
+    sprite.setPosition(position);
+}
+
+
+void GameObject::setScale(sf::Vector2f scale) {
+  sprite.setScale(scale);
 }

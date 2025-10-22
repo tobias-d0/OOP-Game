@@ -11,9 +11,9 @@ private:
 
 public:
     TextHint(sf::RenderWindow* window, const std::string& initialText = "", unsigned int characterSize = 24)
-        : UIElement({0.f, 0.f}), windowRef(window)
+        : UIElement({0.f, 0.f}), windowRef(window), text(font, "", 22)
     {
-        if (!font.loadFromFile("arial.ttf")) { // Replace with your font path
+        if (!font.openFromFile("assets/fonts/AzeretMono[wght].ttf")) {
             throw std::runtime_error("Failed to load font");
         }
         text.setFont(font);
@@ -49,7 +49,7 @@ public:
         if (!windowRef) return;
 
         sf::FloatRect bounds = text.getLocalBounds();
-        float x = (windowRef->getSize().x - bounds.width) / 2.f - bounds.left;
+        float x = (windowRef->getSize().x - bounds.size.x) / 2.f - bounds.position.x;
         float y = 10.f; // 10 pixels from top
         setPosition({x, y});
     }

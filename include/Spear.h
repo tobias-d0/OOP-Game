@@ -2,7 +2,7 @@
 #include "Entity.h"
 #include <SFML/System/Clock.hpp>
 
-class Spear : public Entity {
+class Spear : public Item {
 public:
     // initialPos: world position where spear is thrown from
     // angleRad: angle in radians above horizontal

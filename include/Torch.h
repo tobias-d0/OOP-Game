@@ -1,13 +1,11 @@
 #pragma once
 #include "Item.h"
 
-class Torch : public Item
-{
+class Torch : public Item {
 public:
-  Torch()
-      : Item("Torch", "assets/textures/Torch.png") {}
+    Torch();
 
-  void useItem() override {
-    // doesn't do anything in this instance
-  }
+    void useItem() override {
+        // e.g. toggle light, restore warmth, etc.
+    }
 };

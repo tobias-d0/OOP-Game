@@ -2,6 +2,7 @@
 // #include "Enemy.h"
 // #include "PolarBear.h"
 // #include <iostream>
+// #include <cmath>
 
 // Spear::Spear(const sf::Vector2f& initialPos, float angleRad, float speed, Player* ownerPtr)
 // : owner(ownerPtr) {
