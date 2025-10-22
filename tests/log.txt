@@ -12,27 +12,22 @@ gamemanager.cpp
     segmentation fault due to invalid pointer to player instance (18/10)
 
 gameobject.cpp
-    render() not virtual, caused polymorphism issue (18/10)
-    missing destructor definition warning (20/10)
+    missing destructor definition warning (15/10), fixed (16/10)
 
 iconoverlay.cpp
     text not displaying due to missing font load (19/10), fixed (19/10)
     transparency layer not initialized (21/10), fixed (19/10)
 
-inventory.cpp
-    addItem() allowed overflow past MAX_SIZE (18/10)
-    removeItem(string) caused crash when item not found (20/10)
-
 item.cpp
-    missing include for "Inventory.h" (17/10)
-    incorrect copy of pointer in constructor (19/10)
+    missing include for "Inventory.h" (17/10), fixed (18/10)
+    incorrect copy of pointer in constructor (19/10), fixed (19/10)
 
 player.cpp
-    movement jitter due to deltaTime misuse (19/10)
+    movement jitter due to deltaTime misuse (19/10), fixed (19/10)
 
 spawner.cpp
-    spawned enemies not added to GameManager list (20/10)
+    spawned enemies not added to GameManager list (20/10), fixed (22/10)
 
 torch.cpp
-    flicker animation not synced with frame rate (18/10)
-    null texture pointer crash (22/10)
+    flicker animation not synced with frame rate (18/10), fixed (19/10)
+    null texture pointer crash (22/10), fixed (22/10)
