@@ -1,12 +1,12 @@
 #include <iostream>
 #include "Item.h"
 
-// derive class for testing 
+
 class TestItem : public Item {
 public:
     TestItem(const std::string &name) : Item(name) {}
 
-    void useItem() override {
+    void useItem() {
         std::cout << "Using item: " << name << std::endl;
     }
 
