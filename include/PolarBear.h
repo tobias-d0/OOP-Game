@@ -14,6 +14,6 @@ public:
     void roar();
 
 private:
-    float speed = 70.f;
+    float speed = 350.f;
     float attackRange = 28.f;
 };

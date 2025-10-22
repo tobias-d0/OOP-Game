@@ -2,12 +2,13 @@
 #include "Enemy.h"
 #include <SFML/System/Clock.hpp>
 
-class Wolf : public Enemy {
+class Wolf : public Enemy
+{
 public:
-    Wolf(Player* playerPtr);
+    Wolf(Player *playerPtr);
 
     void update(float deltaTime) override;
-    void render(sf::RenderWindow& window) override;
+    void render(sf::RenderWindow &window) override;
 
     void takeDamage(int amount) override;
     void howl(); // unique behavior (you can expand)
