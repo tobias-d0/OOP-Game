@@ -9,6 +9,7 @@
 
 #include "HealthOverlay.h"
 #include "HungerOverlay.h"
+#include "TextHint.h"
 
 #include "Item.h"
 #include "Spawner.h"
@@ -28,6 +29,8 @@ private:
   void checkItemDropped();
   void cleanupGameObjects();
   void spawnItems();
+  void checkSpearCollisions();
+  void spawnEnemies();
 
   sf::RenderWindow *window;
   sf::Clock *gameClock;
@@ -45,6 +48,10 @@ private:
 
   Spawner spawner;
   sf::Clock spawnClock;
+
+  TextHint *textHint;
+  bool playerDead = false;
+  sf::RectangleShape blackOverlay;
 
   const unsigned int WINDOW_WIDTH = 720;
   const unsigned int WINDOW_HEIGHT = 480;

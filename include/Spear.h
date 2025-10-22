@@ -1,24 +1,30 @@
+// Spear.h
 #pragma once
-#include "Entity.h"
+#include "Item.h"
 #include <SFML/System/Clock.hpp>
+
+class Player;
 
 class Spear : public Item {
 public:
     // initialPos: world position where spear is thrown from
     // angleRad: angle in radians above horizontal
     // speed: initial speed magnitude
-    // lifeTime: max lifetime (s)
     Spear(const sf::Vector2f& initialPos, float angleRad, float speed, Player* owner);
+    
+    // Default constructor for spawning spears as pickups
+    Spear();
 
     void update(float deltaTime) override;
-    void render(sf::RenderWindow& window) override;
+    
+    float getDamage() const { return damage; }
+    bool isProjectile() const { return isFlying; }
 
 private:
     sf::Vector2f velocity; // current velocity (px/sec)
-    float gravity = 980.f; // px/s^2 (tweak as needed)
-    float lifeTime = 5.f;
+    float gravity = 980.f; // px/s^2
     float elapsed = 0.f;
     Player* owner = nullptr;
-
-    void checkCollisions();
+    float damage = 50.f;
+    bool isFlying = false; // true when thrown, false when pickup
 };

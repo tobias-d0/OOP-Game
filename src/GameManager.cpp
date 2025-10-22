@@ -7,9 +7,12 @@
 #include "Entity.h"
 #include "HealthOverlay.h"
 #include "HungerOverlay.h"
+#include "TextHint.h"
 #include "Enemy.h"
 #include "Item.h"
 #include "Spawner.h"
+#include "Wolf.h"
+#include "PolarBear.h"
 
 #include "Torch.h"
 #include "Spear.h"
@@ -49,6 +52,14 @@ void GameManager::init()
   health.setValue(player.getHealth());
   hunger.setValue(player.getHunger());
 
+  // Initialize death screen elements
+  textHint = new TextHint(window, "", 48);
+  textHint->setVisible(false);
+
+  blackOverlay.setSize({static_cast<float>(windowSize.x), static_cast<float>(windowSize.y)});
+  blackOverlay.setFillColor(sf::Color::Black);
+  blackOverlay.setPosition({0.f, 0.f});
+
   spawnItems();
 }
 
@@ -78,6 +89,21 @@ void GameManager::processEvents()
 
 void GameManager::update(float deltaTime)
 {
+
+  if (player.getHealth() <= 0 && !playerDead)
+  {
+    playerDead = true;
+    textHint->setText("YOU DIED");
+    textHint->setVisible(true);
+    std::cout << "Player has died!\n";
+  }
+
+  // Don't update game if player is dead
+  if (playerDead)
+  {
+    return;
+  }
+
   for (Entity *entity : entities)
   {
     entity->update(deltaTime);
@@ -99,29 +125,42 @@ void GameManager::update(float deltaTime)
   cleanupGameObjects();
 }
 
+// In GameManager.cpp - update render():
 void GameManager::render()
 {
-  window->setView(camera);
+  window->clear();
 
-  map.render(*window, camera);
-
-  for (Entity *entity : entities)
+  if (playerDead)
   {
-    entity->render(*window);
+    // Death screen - black background with text
+    window->setView(window->getDefaultView());
+    window->draw(blackOverlay);
+    textHint->render(*window);
   }
-
-  for (Item *item : items)
+  else
   {
-    item->render(*window);
-  }
+    // Normal game rendering
+    window->setView(camera);
 
-  window->setView(window->getDefaultView());
-  health.render(*window);
-  hunger.render(*window);
+    map.render(*window, camera);
+
+    for (Entity *entity : entities)
+    {
+      entity->render(*window);
+    }
+
+    for (Item *item : items)
+    {
+      item->render(*window);
+    }
+
+    window->setView(window->getDefaultView());
+    health.render(*window);
+    hunger.render(*window);
+  }
 
   window->display();
 }
-
 void GameManager::addEntity(Entity *e)
 {
   entities.push_back(e);
@@ -206,7 +245,7 @@ void GameManager::cleanupGameObjects()
 void GameManager::spawnItems()
 {
   const int NUM_TORCHES = 5;
-  // const int NUM_SPEARS = 3;
+  const int NUM_SPEARS = 3;
 
   // Spawn Torches
   for (int i = 0; i < NUM_TORCHES; ++i)
@@ -223,20 +262,100 @@ void GameManager::spawnItems()
     }
   }
 
-  // // Spawn Spears
-  // for (int i = 0; i < NUM_SPEARS; ++i)
-  // {
-  //   Spear *spear = new Spear();
+  // Spawn Spears
+  for (int i = 0; i < NUM_SPEARS; ++i)
+  {
+    Spear *spear = new Spear();
 
-  //   if (spawner.placeItem(spear))
-  //   {
-  //     items.push_back(spear);
-  //   }
-  //   else
-  //   {
-  //     delete spear;
-  //   }
-  // }
+    if (spawner.placeItem(spear))
+    {
+      items.push_back(spear);
+    }
+    else
+    {
+      delete spear;
+    }
+  }
+}
+
+void GameManager::checkSpearCollisions()
+{
+  // Check all spears against all entities
+  for (int i = items.size() - 1; i >= 0; --i)
+  {
+    Item *item = items[i];
+    if (!item || !item->isActive())
+      continue;
+
+    // Check if it's a flying spear
+    Spear *spear = dynamic_cast<Spear *>(item);
+    if (!spear || !spear->isProjectile())
+      continue;
+
+    sf::FloatRect spearBox = spear->getHitbox();
+
+    // Check collision with entities
+    for (int j = entities.size() - 1; j >= 0; --j)
+    {
+      Entity *entity = entities[j];
+      if (!entity || !entity->isActive())
+        continue;
+
+      // Don't hit the player
+      if (entity == &player)
+        continue;
+
+      sf::FloatRect entityBox = entity->getHitbox();
+
+      if (spearBox.findIntersection(entityBox))
+      {
+        // Hit something!
+        entity->takeDamage(spear->getDamage());
+
+        std::cout << "Spear hit entity for " << spear->getDamage() << " damage!\n";
+
+        // Remove the spear
+        spear->markForRemoval();
+        break;
+      }
+    }
+  }
+}
+
+void GameManager::spawnEnemies()
+{
+  const int NUM_WOLVES = 2;
+  const int NUM_POLAR_BEARS = 1;
+
+  // Spawn Wolves
+  for (int i = 0; i < NUM_WOLVES; ++i)
+  {
+    Wolf *wolf = new Wolf(&player);
+
+    if (spawner.placeEntity(wolf))
+    {
+      entities.push_back(wolf);
+    }
+    else
+    {
+      delete wolf;
+    }
+  }
+
+  // Spawn Polar Bears
+  for (int i = 0; i < NUM_POLAR_BEARS; ++i)
+  {
+    PolarBear *bear = new PolarBear(&player);
+
+    if (spawner.placeEntity(bear))
+    {
+      entities.push_back(bear);
+    }
+    else
+    {
+      delete bear;
+    }
+  }
 }
 
 GameManager::~GameManager()

@@ -5,7 +5,7 @@
 #include <ctime>
 
 Map::Map()
-    : width(1600), height(1200), background(snowTexture)
+    : width(800*8), height(600*8), background(snowTexture)
 {
   // Load snow texture
   if (!snowTexture.loadFromFile(SNOW_TEXTURE_PATH))

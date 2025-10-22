@@ -11,5 +11,5 @@ public:
     void takeDamage(int amount) override;
 private:
     float speed = 60.f;
-    float fleeRange = 150.f; // start fleeing if closer than this
+    float fleeRange = 250.f; // start fleeing if closer than this
 };

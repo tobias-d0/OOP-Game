@@ -1,69 +1,69 @@
-// #include "Spear.h"
-// #include "Enemy.h"
-// #include "PolarBear.h"
-// #include <iostream>
-// #include <cmath>
+// Spear.cpp
+#include "Spear.h"
+#include <iostream>
+#include <cmath>
 
-// Spear::Spear(const sf::Vector2f& initialPos, float angleRad, float speed, Player* ownerPtr)
-// : owner(ownerPtr) {
-//     // init texture if you want (user said they will do rendering)
-//     if (!texture.loadFromFile("spear.png")) {
-//         // no texture is fine; user handles rendering if they want
-//     }
-//     sprite.setTexture(texture);
-//     setPosition(initialPos);
+Spear::Spear(const sf::Vector2f &initialPos, float angleRad, float speed, Player *ownerPtr)
+    : Item("Spear"), owner(ownerPtr), isFlying(true)
+{
+  if (!texture.loadFromFile("assets/textures/Spear.png"))
+  {
+    throw std::runtime_error("Failed to load spear texture!");
+  }
+  sprite.setTexture(texture);
 
-//     // initial velocity
-//     velocity.x = std::cos(angleRad) * speed;
-//     velocity.y = -std::sin(angleRad) * speed; // negative because y increases downward in SFML
-// }
+  // Set origin to center for rotation
+  sf::FloatRect bounds = sprite.getLocalBounds();
+  sprite.setOrigin(bounds.size / 2.f);
 
-// void Spear::update(float deltaTime) {
-//     // kinematic update with gravity
-//     elapsed += deltaTime;
-//     // update position
-//     // integrate velocity
-//     velocity.y += gravity * deltaTime;
-//     setPosition(getPosition() + velocity * deltaTime);
+  sprite.setScale({0.5f, 0.5f});
+  setPosition(initialPos);
 
-//     // collision check with enemies
-//     checkCollisions();
+  // initial velocity
+  velocity.x = std::cos(angleRad) * speed;
+  velocity.y = -std::sin(angleRad) * speed; // negative because y increases downward
 
-//     if (elapsed > lifeTime) {
-//         GameManager::get().removeProjectile(this);
-//     }
-// }
+  // Rotate sprite to match trajectory
+  float angle = std::atan2(-velocity.y, velocity.x);
+  sprite.setRotation(sf::degrees(-angle * 180.f / 3.14159f));
+}
 
-// void Spear::render(sf::RenderWindow& window) {
-//     window.draw(sprite);
-// }
+// Default constructor for world spawns (pickup items)
+Spear::Spear() : Item("Spear"), isFlying(false)
+{
+  if (!texture.loadFromFile("assets/textures/spear.png"))
+  {
+    throw std::runtime_error("Failed to load spear texture!");
+  }
+  sprite.setTexture(texture);
 
-// void Spear::checkCollisions() {
-//     // check against all enemies
-//     // brute-force: iterate GameWorld::get().enemies - but enemies are private; we'll rely on GameWorld having friend access
-//     // To keep it simple, we'll access through the public GameWorld::get() internal vector by adding a small getter (or we'll expose a simple function)
-//     // To avoid changing GameWorld again, let's query via a temporary method: we'll assume GameWorld has 'enemies' accessible via friend. Simpler: iterate by adding a public accessor.
+  sf::FloatRect bounds = sprite.getLocalBounds();
+  sprite.setOrigin(bounds.size / 2.f);
 
-//     // I'll implement a minimal public accessor in GameWorld (you can move it).
-//     auto& enemiesRef = GameManager::get().enemies; // note: make 'enemies' public or add accessor (see integration note)
-//     for (Enemy* e : enemiesRef) {
-//         if (!e) continue;
-//         if (!e->isAlive()) continue;
-//         if (getHitbox().intersects(e->getHitbox())) {
-//             // If it's a PolarBear -> kill it
-//             PolarBear* pb = dynamic_cast<PolarBear*>(e);
-//             if (pb) {
-//                 pb->setHealth(0);
-//                 pb->setAlive(false);
-//                 GameManager::get().removeEnemy(pb);
-//                 std::cout << "Spear hit polar bear — it's dead!\n";
-//             } else {
-//                 // normal enemies take damage
-//                 e->takeDamage(50); // spear damage to normal enemies
-//             }
-//             // remove spear on hit
-//             GameManager::get().removeProjectile(this);
-//             return;
-//         }
-//     }
-// }
+  sprite.setScale({0.5f, 0.5f});
+}
+
+void Spear::update(float deltaTime)
+{
+  // Only apply physics if it's flying (thrown)
+  if (!isFlying)
+    return;
+
+  elapsed += deltaTime;
+
+  // Apply gravity
+  velocity.y += gravity * deltaTime;
+
+  // Update position
+  setPosition(getPosition() + velocity * deltaTime);
+
+  // Update rotation to match trajectory
+  float angle = std::atan2(-velocity.y, velocity.x);
+  sprite.setRotation(sf::degrees(-angle * 180.f / 3.14159f));
+
+  // Optional: remove after some time or if off-screen
+  if (elapsed > 5.f)
+  {
+    markForRemoval();
+  }
+}
