@@ -36,6 +36,9 @@ private:
 
   void event1();
   void event2();
+  //void saveGame();
+  //void loadGame();
+  //void processEvents()
 
   sf::RenderWindow *window;
   sf::Clock *gameClock;

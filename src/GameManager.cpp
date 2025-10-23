@@ -526,3 +526,74 @@ GameManager::~GameManager()
     window = nullptr;
   }
 }
+
+/*
+void GameManager::saveGame() {
+    std::ofstream file("save.txt");
+
+    if (!file.is_open()) {
+        std::cout << "Error opening save file.\n";
+        return;
+    }
+
+    // Get player data
+    int health = player.getHealth();
+    int hunger = player.getHunger();
+    int warmth = player.getWarmth();
+    sf::Vector2f pos = player.getPosition();
+
+    // Write data in plain text
+    file << health << " "
+         << pos.x << " " << pos.y << " "
+         << hunger << " "
+         << warmth << "\n";
+
+    file.close();
+    std::cout << "Game saved successfully.\n";
+}
+
+void GameManager::loadGame() {
+    std::ifstream file("save.txt");
+
+    if (!file.is_open()) {
+        std::cout << "No save file found.\n";
+        return;
+    }
+
+    int health, hunger, warmth;
+    float posX, posY;
+
+    // Read data back
+    file >> health >> posX >> posY >> hunger >> warmth;
+
+    // Reapply to player
+    player.setHealth(health);
+    player.setHunger(hunger);
+    player.setWarmth(warmth);
+    player.setPosition(sf::Vector2f(posX, posY));
+
+    file.close();
+    std::cout << "Game loaded successfully.\n";
+}
+    
+void GameManager::processEvents() {
+    sf::Event event;
+    while (window->pollEvent(event)) {
+        if (event.type == sf::Event::Closed)
+            window->close();
+
+        // --- Save/Load controls ---
+        if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::F5) {
+                saveGame();
+            }
+
+            if (event.key.code == sf::Keyboard::F9) {
+                loadGame();
+            }
+        }
+    }
+}
+
+*/
+

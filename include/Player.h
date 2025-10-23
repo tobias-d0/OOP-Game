@@ -73,6 +73,7 @@ public:
   void useItem();
   void craftItem();
 
+  // getters and settings for members specific to player
   int getHunger();
   void setHunger(int hunger);
   int getWarmth();

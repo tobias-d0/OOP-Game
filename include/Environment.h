@@ -4,8 +4,8 @@
 
 class Environment {
  private:
-  enum WeatherState { CLEAR, SNOW, BLIZZARD };
-  WeatherState weatherstate;
+  enum WeatherState { CLEAR, SNOW, BLIZZARD }; //enum for possible weather states 
+  WeatherState weatherstate; //store current weather state
 
  public:
  
