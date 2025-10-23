@@ -11,7 +11,7 @@ public:
     void render(sf::RenderWindow &window) override;
 
     void takeDamage(int amount) override;
-    void howl(); // unique behavior (you can expand)
+    void howl(); // unique behavior
 
 private:
     float speed = 80.f; // pixels/sec

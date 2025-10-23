@@ -60,11 +60,13 @@ public:
   void useItem();
   void craftItem();
 
+  // getters and settings for members specific to player
   int getHunger();
   void setHunger(int hunger);
   int getWarmth();
   void setWarmth(int warmth);
 
+  // functions relating to inventory and items
   Inventory& getInventory() { return inventory; }
   bool pickUpItem(Item* item);
   Item* dropItem();
