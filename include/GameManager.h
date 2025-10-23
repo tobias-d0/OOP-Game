@@ -31,6 +31,8 @@ private:
   void spawnItems();
   void checkSpearCollisions();
   void spawnEnemies();
+  //void saveGame();
+  //void loadGame();
 
   sf::RenderWindow *window;
   sf::Clock *gameClock;
