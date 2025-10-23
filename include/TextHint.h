@@ -19,4 +19,5 @@ public:
   void update(float deltaTime) override;
   void render(sf::RenderWindow &window) const override;
   void setPosition(const sf::Vector2f &pos) override;
+  void setFontSize(int fontSize);
 };

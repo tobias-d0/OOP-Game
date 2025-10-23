@@ -1,9 +1,9 @@
 #pragma once
 #include "Item.h"
 
-class ElectronicsBook : public Item {
+class Radio : public Item {
 public:
-    ElectronicsBook();
+    Radio();
 
     void useItem() override {
         // e.g. toggle light, restore warmth, etc.

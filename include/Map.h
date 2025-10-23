@@ -14,8 +14,8 @@ public:
     int getHeight() const;
 
 private:
-    int width;
-    int height;
+    int width = 6400;
+    int height = 4800;
 
     sf::Texture snowTexture;
     sf::Texture rockTexture;

@@ -28,13 +28,21 @@ private:
   void checkItemPickup();
   void checkItemDropped();
   void cleanupGameObjects();
-  void spawnItems();
+  void spawnItems(bool first = false);
   void checkSpearCollisions();
-  void spawnEnemies();
+  void showHint(const std::string &message);
+  void checkPlayerBounds(float deltaTime);
+  // void spawnEnemies();
+
+  void event1();
+  void event2();
 
   sf::RenderWindow *window;
   sf::Clock *gameClock;
   sf::Clock *framesClock;
+  sf::Clock event1Clock;
+  sf::Clock event2Clock;
+  sf::Clock spawnClock;
 
   std::vector<Entity *> entities;
   std::vector<Item *> items;
@@ -47,9 +55,15 @@ private:
   HungerOverlay hunger;
 
   Spawner spawner;
-  sf::Clock spawnClock;
 
   TextHint *textHint;
+  float hintTimer = 0.f;
+  bool hintVisible = false;
+  const float hintFadeDelay = 5.f;
+  bool playerWon;
+
+  float timeOutsideBounds = 0.f;
+
   bool playerDead = false;
   sf::RectangleShape blackOverlay;
 
@@ -60,6 +74,8 @@ private:
 
 public:
   GameManager();
+  sf::RenderWindow* getWindow();
+  std::vector<Item*>* getItems();
   ~GameManager();
   void run();
 };

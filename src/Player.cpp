@@ -1,7 +1,9 @@
 #include "Player.h"
+#include "GameManager.h"
+#include "Spear.h"
 
-Player::Player(Map &mapRef)
-    : Entity(), map(mapRef), damageSound(damageBuffer), walkSound(walkBuffer)
+Player::Player(GameManager &gm, Map &mapRef)
+    : Entity(), gameManager(gm), window(nullptr), map(mapRef), damageSound(damageBuffer), walkSound(walkBuffer)
 {
   if (!idleTexture.loadFromFile(PLAYER_IDLE_PATH))
     throw std::runtime_error("Failed to load idle texture!");
@@ -31,11 +33,13 @@ Player::Player(Map &mapRef)
   sprite.setOrigin(bounds.size / 2.f);
 
   sprite.setScale({1, 1});
-  sprite.setPosition({720.f / 2.f, 480.f / 2.f});
+  setPosition({static_cast<float>(map.getWidth()) / 2.f, static_cast<float>(map.getHeight()) / 2.f});
 
   velocity = {0.f, 0.f};
   speed = 250.f;
   hunger = 10;
+
+  window = gameManager.getWindow();
 }
 
 void Player::handleInput(const sf::Event &event)
@@ -62,6 +66,66 @@ void Player::handleInput(const sf::Event &event)
     state = PlayerState::Walking;
   else
     state = PlayerState::Idle;
+
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && equippedItem)
+  {
+    equippedItem->useItem();
+  }
+
+  if (event.is<sf::Event::KeyPressed>())
+  {
+    auto keyEvent = *event.getIf<sf::Event::KeyPressed>();
+
+    switch (keyEvent.code)
+    {
+    case sf::Keyboard::Key::Num1:
+      equipItem(0);
+      break;
+    case sf::Keyboard::Key::Num2:
+      equipItem(1);
+      break;
+    case sf::Keyboard::Key::Num3:
+      equipItem(2);
+      break;
+    case sf::Keyboard::Key::Num4:
+      equipItem(3);
+      break;
+    case sf::Keyboard::Key::Num5:
+      equipItem(4);
+      break;
+    case sf::Keyboard::Key::Num6:
+      equipItem(5);
+      break;
+    case sf::Keyboard::Key::Num7:
+      equipItem(6);
+      break;
+    case sf::Keyboard::Key::Num8:
+      equipItem(7);
+      break;
+    case sf::Keyboard::Key::Num9:
+      equipItem(8);
+      break;
+    case sf::Keyboard::Key::Num0:
+      equipItem(9);
+      break;
+
+    case sf::Keyboard::Key::E: // unequip
+      unequipItem();
+      break;
+    default:
+      break;
+    }
+  }
+}
+
+void Player::render(sf::RenderWindow &window)
+{
+  window.draw(sprite);
+
+  if (equippedItem && equippedItem->isVisible())
+  {
+    equippedItem->render(window);
+  }
 }
 
 void Player::update(float deltaTime)
@@ -142,6 +206,22 @@ void Player::update(float deltaTime)
   {
     takeDamage(1);
   }
+
+  if (regenClock.getElapsedTime().asSeconds() >= regenDelay && getHealth() < 10 && getHunger() > 7)
+  {
+    setHunger(getHunger() - 1);
+    setHealth(getHealth() + 1);
+    regenClock.restart();
+  }
+
+  if (equippedItem)
+  {
+    sf::Vector2f offset(25.f * (facingRight ? 1.f : -1.f), 0.f); // offset to the right or left
+    equippedItem->setPosition(position + offset);
+    sf::Vector2f currentScale = equippedItem->getScale();
+    equippedItem->setScale({std::abs(currentScale.x) * (facingRight ? 1.f : -1.f),
+                            currentScale.y});
+  }
 }
 
 void Player::takeDamage(int damage)
@@ -216,4 +296,36 @@ Item *Player::dropSelectedItem()
     return item;
   }
   return nullptr;
+}
+
+void Player::equipItem(int index)
+{
+  Item *item = inventory.getItem(index);
+  if (!item)
+  {
+    return;
+  }
+
+  equippedItem = item;
+  item->setVisible(true);
+  item->setActive(true);
+
+  if (auto *spear = dynamic_cast<Spear *>(item))
+    spear->bind(this, gameManager.getItems()); // or a getter for the world items vector
+}
+
+void Player::unequipItem()
+{
+  if (!equippedItem)
+  {
+    return;
+  }
+  equippedItem->setActive(false);
+  equippedItem->setVisible(false);
+  equippedItem = nullptr;
+}
+
+Item *Player::getEquippedItem() const
+{
+  return equippedItem;
 }

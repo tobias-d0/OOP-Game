@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 TextHint::TextHint(sf::RenderWindow *window, const std::string &initialText, unsigned int characterSize)
-    : UIElement({0.f, 0.f}), windowRef(window), text(font, "", characterSize)
+    : UIElement({0.f, 0.f}), text(font, "", characterSize), windowRef(window)
 {
   if (!font.openFromFile("assets/fonts/AzeretMono[wght].ttf"))
   {
@@ -52,4 +52,8 @@ void TextHint::updatePosition()
   float x = (windowRef->getSize().x - bounds.size.x) / 2.f - bounds.position.x;
   float y = 10.f; // 10 pixels from top
   setPosition({x, y});
+}
+
+void TextHint::setFontSize(int fontSize) {
+  text.setCharacterSize(fontSize);
 }

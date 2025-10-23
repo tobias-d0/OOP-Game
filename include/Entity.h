@@ -14,6 +14,7 @@ public:
 
     // Core behaviour
     virtual void update(float deltaTime) = 0;
+    virtual void render(sf::RenderWindow& window);
 
     // Combat / health
     virtual void takeDamage(int damage) = 0;

@@ -7,7 +7,7 @@ Seal::Seal(Player* playerPtr) : Enemy(playerPtr) {
     if (!texture.loadFromFile("assets/textures/Seal.png")) {
         std::cout << "Error loading seal.png\n";
     }
-    sprite.setTexture(texture);
+    sprite.setTexture(texture, true);
     setHealth(20);
 }
 

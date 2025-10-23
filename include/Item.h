@@ -15,7 +15,7 @@ public:
 
     // Core behaviour
     virtual void update(float deltaTime) override {}
-    // virtual void useItem() = 0;
+    virtual void useItem() = 0;
 
     // Common accessors
     std::string getName() const { return name; }

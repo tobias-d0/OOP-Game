@@ -1,6 +1,7 @@
-#include "GameManager.h"
-
 #include <iostream>
+#include <sstream>
+
+#include "GameManager.h"
 
 #include "Map.h"
 #include "Player.h"
@@ -13,11 +14,13 @@
 #include "Spawner.h"
 #include "Wolf.h"
 #include "PolarBear.h"
-
 #include "Torch.h"
 #include "Spear.h"
+#include "Electronics.h"
+#include "ElectronicsBook.h"
+#include "Radio.h"
 
-GameManager::GameManager() : map(), player(map), health({0, 0}), hunger({100, 0}), spawner(map)
+GameManager::GameManager() : map(), player(*this, map), health({0, 0}), hunger({100, 0}), spawner(map)
 {
   init();
 }
@@ -60,7 +63,8 @@ void GameManager::init()
   blackOverlay.setFillColor(sf::Color::Black);
   blackOverlay.setPosition({0.f, 0.f});
 
-  spawnItems();
+  spawnItems(true);
+  event2();
 }
 
 void GameManager::run()
@@ -93,14 +97,21 @@ void GameManager::update(float deltaTime)
   if (player.getHealth() <= 0 && !playerDead)
   {
     playerDead = true;
-    textHint->setText("YOU DIED");
-    textHint->setVisible(true);
+    textHint->setFontSize(24);
+    showHint("YOU DIED");
     std::cout << "Player has died!\n";
   }
 
   // Don't update game if player is dead
   if (playerDead)
   {
+    return;
+  }
+
+  if (player.getInventory().hasItem("Radio") && player.getInventory().hasItem("Electronics") && player.getInventory().hasItem("ElectronicsBook"))
+  {
+    showHint("You crafted the radio and got help!");
+    playerWon = true;
     return;
   }
 
@@ -122,6 +133,24 @@ void GameManager::update(float deltaTime)
   checkItemDropped();
   checkItemPickup();
 
+  if (event1Clock.getElapsedTime().asSeconds() >= 60)
+  {
+    event1();
+    event1Clock.restart();
+  }
+  if (event2Clock.getElapsedTime().asSeconds() >= 45)
+  {
+    event2();
+    event2Clock.restart();
+  }
+  if (spawnClock.getElapsedTime().asSeconds() >= 60)
+  {
+    spawnItems();
+    spawnClock.restart();
+  }
+
+  checkPlayerBounds(deltaTime);
+
   cleanupGameObjects();
 }
 
@@ -131,6 +160,13 @@ void GameManager::render()
   window->clear();
 
   if (playerDead)
+  {
+    // Death screen - black background with text
+    window->setView(window->getDefaultView());
+    window->draw(blackOverlay);
+    textHint->render(*window);
+  }
+  else if (playerWon)
   {
     // Death screen - black background with text
     window->setView(window->getDefaultView());
@@ -155,6 +191,7 @@ void GameManager::render()
     }
 
     window->setView(window->getDefaultView());
+    textHint->render(*window);
     health.render(*window);
     hunger.render(*window);
   }
@@ -242,10 +279,14 @@ void GameManager::cleanupGameObjects()
   }
 }
 
-void GameManager::spawnItems()
+void GameManager::spawnItems(bool first)
 {
-  const int NUM_TORCHES = 5;
-  const int NUM_SPEARS = 3;
+  if (first)
+  {
+  }
+
+  const int NUM_TORCHES = 2;
+  const int NUM_SPEARS = 0;
 
   // Spawn Torches
   for (int i = 0; i < NUM_TORCHES; ++i)
@@ -262,19 +303,51 @@ void GameManager::spawnItems()
     }
   }
 
-  // Spawn Spears
-  for (int i = 0; i < NUM_SPEARS; ++i)
-  {
-    Spear *spear = new Spear();
+  // // Spawn Spears
+  // for (int i = 0; i < NUM_SPEARS; ++i)
+  // {
+  //   Spear *spear = new Spear({0, 0}, 0.f, 100.f, &player, &items);
 
-    if (spawner.placeItem(spear))
-    {
-      items.push_back(spear);
-    }
-    else
-    {
-      delete spear;
-    }
+  //   if (spawner.placeItem(spear))
+  //   {
+  //     items.push_back(spear);
+  //   }
+  //   else
+  //   {
+  //     delete spear;
+  //   }
+  // }
+
+  Electronics *electronics = new Electronics();
+
+  if (spawner.placeItem(electronics))
+  {
+    items.push_back(electronics);
+  }
+  else
+  {
+    delete electronics;
+  }
+
+  ElectronicsBook *electronicsbook = new ElectronicsBook();
+
+  if (spawner.placeItem(electronicsbook))
+  {
+    items.push_back(electronicsbook);
+  }
+  else
+  {
+    delete electronicsbook;
+  }
+  Radio *radio = new Radio();
+
+  if (spawner.placeItem(radio))
+  {
+    items.push_back(radio);
+  }
+  else
+  {
+    delete radio;
   }
 }
 
@@ -322,12 +395,9 @@ void GameManager::checkSpearCollisions()
   }
 }
 
-void GameManager::spawnEnemies()
+void GameManager::event1()
 {
-  const int NUM_WOLVES = 2;
-  const int NUM_POLAR_BEARS = 1;
-
-  // Spawn Wolves
+  int NUM_WOLVES = 10;
   for (int i = 0; i < NUM_WOLVES; ++i)
   {
     Wolf *wolf = new Wolf(&player);
@@ -341,21 +411,109 @@ void GameManager::spawnEnemies()
       delete wolf;
     }
   }
+}
 
-  // Spawn Polar Bears
-  for (int i = 0; i < NUM_POLAR_BEARS; ++i)
+void GameManager::event2()
+{
+  PolarBear *bear = new PolarBear(&player);
+
+  if (spawner.placeEntity(bear))
   {
-    PolarBear *bear = new PolarBear(&player);
+    entities.push_back(bear);
+  }
+  else
+  {
+    delete bear;
+  }
+}
 
-    if (spawner.placeEntity(bear))
+void GameManager::checkPlayerBounds(float deltaTime)
+{
+
+  const float mapW = map.getWidth();
+  const float mapH = map.getHeight();
+  sf::Vector2f pos = player.getPosition();
+
+  bool outside = false;
+  std::string direction;
+
+  // Check horizontal boundaries
+  if (pos.x < 0.f)
+  {
+    outside = true;
+    direction = "East";
+  }
+  else if (pos.x > mapW)
+  {
+    outside = true;
+    direction = "West";
+  }
+
+  // Check vertical boundaries
+  if (pos.y < 0.f)
+  {
+    outside = true;
+    direction = "South";
+  }
+  else if (pos.y > mapH)
+  {
+    outside = true;
+    direction = "North";
+  }
+
+  if (outside)
+  {
+    timeOutsideBounds += deltaTime;
+
+    if (timeOutsideBounds < 20.f)
     {
-      entities.push_back(bear);
+      std::ostringstream msg;
+      msg << "You are venturing too far! Turn back " << direction << ".";
+      textHint->setFontSize(16);
+      showHint(msg.str());
+    }
+    else if (timeOutsideBounds < 30.f)
+    {
+      textHint->setFontSize(16);
+      showHint("You are succumbing to hypothermia...");
     }
     else
     {
-      delete bear;
+      player.takeDamage(10);
     }
   }
+  else
+  {
+    timeOutsideBounds = 0.f;
+  }
+
+  if (hintVisible)
+  {
+    hintTimer += deltaTime;
+    if (hintTimer > hintFadeDelay)
+    {
+      textHint->setVisible(false);
+      hintVisible = false;
+    }
+  }
+}
+
+void GameManager::showHint(const std::string &message)
+{
+  textHint->setText(message);
+  textHint->setVisible(true);
+  hintVisible = true;
+  hintTimer = 0.f; // reset fade timer
+}
+
+sf::RenderWindow *GameManager::getWindow()
+{
+  return window;
+}
+
+std::vector<Item *> *GameManager::getItems()
+{
+  return &items;
 }
 
 GameManager::~GameManager()

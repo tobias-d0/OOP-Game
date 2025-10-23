@@ -11,14 +11,8 @@ Spawner::Spawner(const Map &gameMap)
 
 sf::Vector2f Spawner::getRandomPosition()
 {
-    // Compute half extents of the map
-    float halfWidth = mapWidth / 2.f;
-    float halfHeight = mapHeight / 2.f;
-
-    // Generate random coordinates between -half and +half for both axes
-    float x = static_cast<float>(std::rand()) / RAND_MAX * mapWidth - halfWidth;
-    float y = static_cast<float>(std::rand()) / RAND_MAX * mapHeight - halfHeight;
-
+    float x = static_cast<float>(std::rand()) / RAND_MAX * mapWidth;
+    float y = static_cast<float>(std::rand()) / RAND_MAX * mapHeight;
     return {x, y};
 }
 
@@ -30,6 +24,13 @@ bool Spawner::placeItem(Item *item)
     {
         sf::Vector2f pos = getRandomPosition();
         item->setPosition(pos);
+        
+        sf::FloatRect hb = item->getHitbox();
+
+        std::cout << "Attempt " << i
+                  << ": pos(" << pos.x << ", " << pos.y << ") "
+                  << "hitbox(pos=" << hb.position.x << "," << hb.position.y
+                  << " size=" << hb.size.x << "," << hb.size.y << ")\n";
 
         if (!map.isBlocked(item->getHitbox()))
         {

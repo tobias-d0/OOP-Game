@@ -14,3 +14,8 @@ Entity::Entity(const std::string &texturePath)
       health(10)
 {
 }
+
+void Entity::render(sf::RenderWindow &window)
+{
+  window.draw(sprite);
+}

@@ -5,7 +5,7 @@
 #include <ctime>
 
 Map::Map()
-    : width(800*8), height(600*8), background(snowTexture)
+    : background(snowTexture)
 {
   // Load snow texture
   if (!snowTexture.loadFromFile(SNOW_TEXTURE_PATH))
@@ -24,9 +24,6 @@ Map::Map()
   // Generate random rock formations
   generateRocks();
 }
-
-#include <cstdlib>
-#include <ctime>
 
 void Map::generateRocks()
 {

@@ -6,6 +6,8 @@
 #include "Map.h"
 #include "Inventory.h"
 
+class GameManager;
+
 enum class PlayerState
 {
   Idle,
@@ -15,10 +17,12 @@ enum class PlayerState
 class Player : public Entity
 {
 private:
+  GameManager &gameManager;
   sf::Vector2f velocity;
   int hunger;
   int warmth;
   Inventory inventory;
+  sf::RenderWindow* window;
   Map &map;
 
   bool damageImmune = false;
@@ -48,14 +52,23 @@ private:
   sf::Clock walkSoundClock;
   float walkSoundInterval = 4.4f; // audio duration
 
+  sf::Clock regenClock;
+  float regenDelay = 2.f;
+
   int itemNumberSelected = -1; // -1 is no item
+  Item *equippedItem = nullptr;
 
 public:
-  Player(Map &map);
+  Player(GameManager &gm, Map &map);
 
+  GameManager &getGameManager() { return gameManager; }
   void handleInput(const sf::Event &event);
   void update(float deltaTime) override;
+  void render(sf::RenderWindow &window) override;
   void takeDamage(int damage) override;
+
+  sf::Vector2f getVelocity() { return velocity; }
+  bool isFacingRight() { return facingRight; }
 
   void useItem();
   void craftItem();
@@ -65,12 +78,15 @@ public:
   int getWarmth();
   void setWarmth(int warmth);
 
-  Inventory& getInventory() { return inventory; }
-  bool pickUpItem(Item* item);
-  Item* dropItem();
+  Inventory &getInventory() { return inventory; }
+  bool pickUpItem(Item *item);
+  Item *dropItem();
   void displayInventory();
   int getItemIndexSelected();
-  Item* getItemSelected();
-  Item* dropSelectedItem();
+  Item *getItemSelected();
+  Item *dropSelectedItem();
 
+  void equipItem(int index);
+  void unequipItem();
+  Item *getEquippedItem() const;
 };

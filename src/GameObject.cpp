@@ -15,7 +15,7 @@ GameObject::GameObject()
   {
     throw std::runtime_error("Failed to load placeholder texture!");
   }
-  sprite.setTexture(texture);
+  sprite.setTexture(texture, true);
 }
 
 GameObject::GameObject(const std::string &texturePath)
@@ -32,7 +32,11 @@ GameObject::GameObject(const std::string &texturePath)
       throw std::runtime_error("Failed to load placeholder texture!");
     }
   }
-  sprite.setTexture(texture);
+  sprite.setTexture(texture, true);
+  sf::FloatRect bounds = sprite.getLocalBounds();
+
+  // Set origin to the center of the sprite
+  sprite.setOrigin(bounds.getCenter());
 }
 
 void GameObject::render(sf::RenderWindow &window)
@@ -91,21 +95,25 @@ sf::FloatRect GameObject::getHitbox() const
 
 void GameObject::setTexture(const std::string &path)
 {
-    if (!texture.loadFromFile(path))
-    {
-        throw std::runtime_error("Failed to load texture: " + path);
-    }
+  if (!texture.loadFromFile(path))
+  {
+    throw std::runtime_error("Failed to load texture: " + path);
+  }
 
-    sprite.setTexture(texture, true);
+  sprite.setTexture(texture, true);
 
-    // Recalculate size and origin
-    size_t width = texture.getSize().x;
-    size_t height = texture.getSize().y;
-    sprite.setOrigin({width / 2.f, height / 2.f}); // ✅ centers sprite
-    sprite.setPosition(position);
+  // Recalculate size and origin
+  size_t width = texture.getSize().x;
+  size_t height = texture.getSize().y;
+  sprite.setOrigin({width / 2.f, height / 2.f}); // ✅ centers sprite
+  sprite.setPosition(position);
 }
 
-
-void GameObject::setScale(sf::Vector2f scale) {
+void GameObject::setScale(sf::Vector2f scale)
+{
   sprite.setScale(scale);
+}
+
+sf::Vector2f GameObject::getScale() {
+  return sprite.getScale();
 }

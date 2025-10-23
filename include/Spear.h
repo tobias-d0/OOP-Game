@@ -1,30 +1,39 @@
-// Spear.h
 #pragma once
 #include "Item.h"
-#include <SFML/System/Clock.hpp>
+#include <SFML/Graphics.hpp>
+#include <vector>
 
 class Player;
 
-class Spear : public Item {
+class Spear : public Item
+{
 public:
-    // initialPos: world position where spear is thrown from
-    // angleRad: angle in radians above horizontal
-    // speed: initial speed magnitude
-    Spear(const sf::Vector2f& initialPos, float angleRad, float speed, Player* owner);
-    
-    // Default constructor for spawning spears as pickups
+    // For thrown spears
+    Spear(const sf::Vector2f &initialPos,
+          float angleRad,
+          float speed,
+          Player *ownerPtr,
+          std::vector<Item *> *worldItems);
+
+    // For ground (pickup) spears
     Spear();
 
     void update(float deltaTime) override;
-    
+    void useItem() override;
+
+    void setFlying(bool flying) { isFlying = flying; }
+    bool isProjectile() const { return isFlying; } // used by GameManager
     float getDamage() const { return damage; }
-    bool isProjectile() const { return isFlying; }
+
+    void bind(Player *newOwner, std::vector<Item *> *worldItemsPtr);
 
 private:
-    sf::Vector2f velocity; // current velocity (px/sec)
-    float gravity = 980.f; // px/s^2
+    Player *owner = nullptr;
+    std::vector<Item *> *worldItems = nullptr; // pointer to GameManager's items list
+
+    sf::Vector2f velocity;
+    float gravity = 100.f;
     float elapsed = 0.f;
-    Player* owner = nullptr;
-    float damage = 50.f;
-    bool isFlying = false; // true when thrown, false when pickup
+    bool isFlying = false;
+    float damage = 20.f;
 };
