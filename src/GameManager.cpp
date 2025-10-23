@@ -417,6 +417,25 @@ void GameManager::loadGame() {
     file.close();
     std::cout << "Game loaded successfully.\n";
 }
+    
+void GameManager::processEvents() {
+    sf::Event event;
+    while (window->pollEvent(event)) {
+        if (event.type == sf::Event::Closed)
+            window->close();
+
+        // --- Save/Load controls ---
+        if (event.type == sf::Event::KeyPressed) {
+            if (event.key.code == sf::Keyboard::F5) {
+                saveGame();
+            }
+
+            if (event.key.code == sf::Keyboard::F9) {
+                loadGame();
+            }
+        }
+    }
+}
 
 */
 

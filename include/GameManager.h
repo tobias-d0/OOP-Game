@@ -33,6 +33,7 @@ private:
   void spawnEnemies();
   //void saveGame();
   //void loadGame();
+  //void processEvents()
 
   sf::RenderWindow *window;
   sf::Clock *gameClock;
